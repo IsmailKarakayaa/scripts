@@ -11,7 +11,7 @@ $explorerStringKey = '{e2bf9676-5f8f-435c-97eb-11607a5bedf7}'
 
 
 # Enable Windows 10 Context Menu
-function Windows10ContextMenu {
+function EnableWindows10ContextMenu {
     try {
         if(Test-Path $context\$contextFolder\$contextKey) {
             Write-Host The required key for context menu already exists: $context\$contextFolder\$contextKey  -foregroundcolor green
@@ -33,7 +33,7 @@ function Windows10ContextMenu {
 }
 
 # Enable Windows 10 Explorer UI
-function EnableWindows10ExplorerUI{
+function EnableWindows10ExplorerUI {
     try {
         if(Get-ItemProperty $explorer\$explorerfolder | Get-Member $explorerStringKey -ErrorAction SilentlyContinue) {
             Write-Host The required key string for explorer ui already exists: $explorer\$explorerFolder\$explorerStringKey  -foregroundcolor green
@@ -53,5 +53,8 @@ function EnableWindows10ExplorerUI{
         Write-Host $_ -foregroundcolor red
     }
 }
+
+EnableWindows10ContextMenu
+EnableWindows10ExplorerUI
 
 Read-Host -Prompt "Press Enter to exit"
