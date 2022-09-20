@@ -11,45 +11,47 @@ $explorerStringKey = '{e2bf9676-5f8f-435c-97eb-11607a5bedf7}'
 
 
 # Enable Windows 10 Context Menu
-try {
-    if(Test-Path $context\$contextFolder\$contextKey) {
-        Write-Host The required key for context menu already exists: $context\$contextFolder\$contextKey  -foregroundcolor green
-    }
-    else {
-        new-item -Path $context -Name $contextFolder -ErrorAction SilentlyContinue
-        Write-Host Created key folder $contextFolder 
+function Windows10ContextMenu {
+    try {
+        if(Test-Path $context\$contextFolder\$contextKey) {
+            Write-Host The required key for context menu already exists: $context\$contextFolder\$contextKey  -foregroundcolor green
+        }
+        else {
+            new-item -Path $context -Name $contextFolder -ErrorAction SilentlyContinue
+            Write-Host Created key folder $contextFolder 
+        
+            new-item -Path $context\$contextFolder -Name $contextKey -Value ""
+            Write-Host Created key $contextKey
     
-        new-item -Path $context\$contextFolder -Name $contextKey -Value ""
-        Write-Host Created key $contextKey
-
-        Write-Host Enabled Windows 10 context menu -ForegroundColor Green
+            Write-Host Enabled Windows 10 context menu -ForegroundColor Green
+        }
+    }
+    catch {
+        Write-Host "An error occured while enabling the Windows 10 context menu: " -foregroundcolor red
+        Write-Host $_ -foregroundcolor red
     }
 }
-catch {
-    Write-Host "An error occured: " -foregroundcolor red
-    Write-Host $_ -foregroundcolor red
-}
-
 
 # Enable Windows 10 Explorer UI
-
-try {
-    if(Get-ItemProperty $explorer\$explorerfolder | Get-Member $explorerStringKey -ErrorAction SilentlyContinue) {
-        Write-Host The required key string for explorer ui already exists: $explorer\$explorerFolder\$explorerStringKey  -foregroundcolor green
-    }
+function EnableWindows10ExplorerUI{
+    try {
+        if(Get-ItemProperty $explorer\$explorerfolder | Get-Member $explorerStringKey -ErrorAction SilentlyContinue) {
+            Write-Host The required key string for explorer ui already exists: $explorer\$explorerFolder\$explorerStringKey  -foregroundcolor green
+        }
+        
+        else {
+            New-item -Path $explorer -Name $explorerFolder -ErrorAction SilentlyContinue
+            New-ItemProperty -Path $explorer\$explorerFolder -PropertyType 'String' -Name $explorerStringKey -ErrorAction Stop
+            Write-Host Created key string $explorerStringKey at $explorer\$explorerFolder
+            Get-ItemProperty $explorer\$explorerFolder
     
-    else {
-        New-item -Path $explorer -Name $explorerFolder -ErrorAction SilentlyContinue
-        New-ItemProperty -Path $explorer\$explorerFolder -PropertyType 'String' -Name $explorerStringKey -ErrorAction Stop
-        Write-Host Created key string $explorerStringKey at $explorer\$explorerFolder
-        Get-ItemProperty $explorer\$explorerFolder
-
-        Write-Host Enabled Windows 10 Explorer UI -ForegroundColor green
+            Write-Host Enabled Windows 10 Explorer UI -ForegroundColor green
+        }
     }
-}
-catch {
-    Write-Host "An error occured: " -foregroundcolor red
-    Write-Host $_ -foregroundcolor red
+    catch {
+        Write-Host "An error occured while enabling the Windows 10 Explorer UI: " -foregroundcolor red
+        Write-Host $_ -foregroundcolor red
+    }
 }
 
 Read-Host -Prompt "Press Enter to exit"
