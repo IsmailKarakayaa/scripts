@@ -54,7 +54,27 @@ function EnableWindows10ExplorerUI{
     }
 }
 
+$taskbar = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
+$taskbarDWord = 'TaskbarAl'
+
+function AlignTaskbarLeft {
+    try {
+        if(Get-ItemProperty $taskbar | Get-Member | Where-Object {$_.Name -eq $taskbarDWord -and $_.Definition -eq 'int TaskbarAl=0'}){
+            Write-Host Taskbar is already aligned to left -ForegroundColor Green
+        }
+        else {
+            New-ItemProperty -Path $taskbar -Name $taskbarDWord -PropertyType DWord -Value 0 -ErrorAction Stop
+            Write-Host Aligned Taskbar to left -ForegroundColor Green
+        }
+    }
+    catch {
+        Write-Host "An error occured while aligning the Taskbar: " -foregroundcolor red
+        Write-Host $_ -foregroundcolor red
+    }
+}
+
 EnableWindows10ContextMenu
 EnableWindows10ExplorerUI
+AlignTaskbarLeft
 
 Read-Host -Prompt "Press Enter to exit"
